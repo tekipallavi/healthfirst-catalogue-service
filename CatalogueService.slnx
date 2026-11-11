@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CatalogueService.Api/CatalogueService.Api.csproj" />
+    <Project Path="src/CatalogueService.Application/CatalogueService.Application.csproj" />
+    <Project Path="src/CatalogueService.Domain/CatalogueService.Domain.csproj" />
+    <Project Path="src/CatalogueService.Infrastructure/CatalogueService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CatalogueService.IntegrationTests/CatalogueService.IntegrationTests.csproj" />
+    <Project Path="tests/CatalogueService.UnitTests/CatalogueService.UnitTests.csproj" />
+  </Folder>
+</Solution>
