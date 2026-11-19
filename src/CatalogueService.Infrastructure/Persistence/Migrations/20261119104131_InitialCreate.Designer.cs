@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogueService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(CatalogueDbContext))]
-    [Migration("20261113064157_InitialCatalogue")]
-    partial class InitialCatalogue
+    [Migration("20261119104131_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

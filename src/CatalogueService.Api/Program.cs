@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using CatalogueService.Api.Products;
 using CatalogueService.Application.Products;
 using CatalogueService.Infrastructure;
+using CatalogueService.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("Catalogue")
     ?? throw new InvalidOperationException(
         "Connection string 'Catalogue' is missing. Configure it before starting the API.");
 builder.Services.AddInfrastructure(connectionString);
+builder.Services.AddHealthChecks().AddDbContextCheck<CatalogueDbContext>();
 
 var app = builder.Build();
 
@@ -29,5 +31,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapProducts();
+app.MapHealthChecks("/health/dbcheck");
 
 app.Run();
