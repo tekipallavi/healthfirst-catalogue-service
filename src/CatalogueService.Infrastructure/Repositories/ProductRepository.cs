@@ -10,15 +10,17 @@ public sealed class ProductRepository(CatalogueDbContext dbContext) : IProductRe
     public Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         dbContext.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken = default) =>
-        //await dbContext.Products.AsNoTracking().OrderBy(x => x.Name).ToListAsync(cancellationToken);
-        //mock the data for now
-        await Task.FromResult(new List<Product>
-        {
-            new ( "Product 1", "Description 1", 10, ProductStatus.Active),
-            new ( "Product 2", "Description 2", 20, ProductStatus.Active),
-            new ("Product 3", "Description 3", 30, ProductStatus.Active),
-        } as IReadOnlyList<Product>);
+    public async Task<IReadOnlyList<Product>> GetAllAsync(string search, string sortBy, string sortOrder, CancellationToken cancellationToken = default)
+
+    {
+        var products = dbContext.Products.AsNoTracking();
+        var query = products.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
+        query = sortOrder == "asc"
+? query.OrderBy(p => p.Name)
+: query.OrderByDescending(p => p.Name);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 
     public async Task AddAsync(Product product, CancellationToken cancellationToken = default)
     {

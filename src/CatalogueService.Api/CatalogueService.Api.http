@@ -1,7 +1,7 @@
 @CatalogueService.Api_HostAddress = http://localhost:5284
 
 ### Get all products
-GET {{CatalogueService.Api_HostAddress}}/api/products
+GET {{CatalogueService.Api_HostAddress}}/api/products?search=simp
 Accept: application/json
 
 ### Create a product
@@ -10,9 +10,9 @@ POST {{CatalogueService.Api_HostAddress}}/api/products
 Content-Type: application/json
 
 {
-  "name": "Wireless Mouse",
-  "description": "A simple wireless mouse",
-  "price": 29.99,
+  "name": "Laptop",
+  "description": "A complex wireless laptop",
+  "price": 299.99,
   "status": "Active"
 }
 

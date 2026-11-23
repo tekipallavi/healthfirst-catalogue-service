@@ -5,21 +5,45 @@ namespace CatalogueService.Api.Products;
 
 public static class ProductEndpoints
 {
+    private static readonly string[] SortFields = [ "name", "price", "status", "createdAt" ]; 
+    private static readonly string[] SortOrders = [ "asc", "desc" ];
+
     public static WebApplication MapProducts(this WebApplication app)
     {
         var products = app.MapGroup("/api/products").WithTags("Products");
 
-        products.MapGet("", async Task<Ok<IReadOnlyList<ProductResponse>>> (
+        products.MapGet("", async Task<Results<Ok<IReadOnlyList<ProductResponse>>, ValidationProblem> > (
+            string? search,
+            string? sortBy,
+            string? sortOrder,
             IProductService productService,
             CancellationToken cancellationToken) =>
         {
-            var result = await productService.GetAllAsync(cancellationToken);
+            search = string.IsNullOrWhiteSpace(search)? "" : search.Trim();
+            sortBy = string.IsNullOrWhiteSpace(sortBy)? "createdAt" : SortFields.FirstOrDefault(field => string.Equals(sortBy.Trim(), field, StringComparison.OrdinalIgnoreCase));
+            sortOrder = string.IsNullOrWhiteSpace(sortOrder)? "asc" : SortOrders.FirstOrDefault(order => string.Equals(sortOrder.Trim(), order, StringComparison.OrdinalIgnoreCase));
+          
+            if(sortBy is null || sortOrder is null)
+            {
+                var errors = new Dictionary<string, string[]>();
+                if(sortBy is null)
+                {
+                   errors["sortBy"] = ["SortBy should have only Name, Price, CreatedAt"];
+                } 
+                if(sortOrder is null)
+                {
+                   errors["sortOrder"] = ["SortBy should have only asc or desc"];
+                } 
+                return TypedResults.ValidationProblem(errors);
+            }
+            var result = await productService.GetAllAsync(search, sortBy, sortOrder, cancellationToken);
             return TypedResults.Ok<IReadOnlyList<ProductResponse>>(result.Select(ToResponse).ToArray());
         })
         .WithName("GetProducts")
         .WithSummary("Get all products")
         .WithDescription("Returns all products, ordered by name.")
-        .Produces<IReadOnlyList<ProductResponse>>(StatusCodes.Status200OK);
+        .Produces<IReadOnlyList<ProductResponse>>(StatusCodes.Status200OK)
+        .ProducesValidationProblem();
 
         products.MapGet("/{id:guid}", async Task<Results<Ok<ProductResponse>, NotFound>> (
             Guid id,

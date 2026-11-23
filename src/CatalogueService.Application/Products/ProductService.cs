@@ -11,9 +11,10 @@ public sealed class ProductService(IProductRepository productRepository) : IProd
         return product is null ? null : ToDto(product);
     }
 
-    public async Task<IReadOnlyList<ProductDto>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ProductDto>> GetAllAsync(string search, string sortBy, string sortOrder, CancellationToken cancellationToken = default)
     {
-        var products = await productRepository.GetAllAsync(cancellationToken);
+
+        var products = await productRepository.GetAllAsync(search, sortBy, sortOrder, cancellationToken);
         return products.Select(ToDto).ToArray();
     }
 
