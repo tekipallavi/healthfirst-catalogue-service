@@ -15,9 +15,19 @@ public sealed class ProductRepository(CatalogueDbContext dbContext) : IProductRe
     {
         var products = dbContext.Products.AsNoTracking();
         var query = products.Where(p => p.Name.Contains(search) || p.Description.Contains(search));
-        query = sortOrder == "asc"
-? query.OrderBy(p => p.Name)
-: query.OrderByDescending(p => p.Name);
+        query = (sortBy, sortOrder) switch
+        {
+            ("name", "asc") => query.OrderBy(p => p.Name),
+            ("name", "desc") => query.OrderByDescending(p => p.Name),
+            ("price", "asc") => query.OrderBy(p => p.Price),
+            ("price", "desc") => query.OrderByDescending(p => p.Price),
+            ("status", "asc") => query.OrderBy(p => p.Status),
+            ("status", "desc") => query.OrderByDescending(p => p.Status),
+            ("createdAt", "asc") => query.OrderBy(p => p.CreatedAt),
+            ("createdAt", "desc") => query.OrderByDescending(p => p.CreatedAt),
+            _ => throw new ArgumentException(
+                $"Unsupported sort field '{sortBy}' or sort order '{sortOrder}'.")
+        };
 
         return await query.ToListAsync(cancellationToken);
     }

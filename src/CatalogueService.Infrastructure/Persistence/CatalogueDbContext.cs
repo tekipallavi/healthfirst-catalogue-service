@@ -17,6 +17,7 @@ public sealed class CatalogueDbContext(DbContextOptions<CatalogueDbContext> opti
         product.Property(x => x.Description).HasMaxLength(1000).IsRequired();
         product.Property(x => x.Price).HasPrecision(18, 2);
         product.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        product.Property(x => x.Quantity).IsRequired(false);
         product.Property(x => x.CreatedAt).IsRequired();
         product.HasIndex(x => x.Name);
     }

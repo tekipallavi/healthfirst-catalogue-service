@@ -71,7 +71,8 @@ public static class ProductEndpoints
                 request.Name,
                 request.Description,
                 request.Price,
-                request.Status);
+                request.Status,
+                request.Quantity);
             var product = await productService.CreateAsync(command, cancellationToken);
             var response = ToResponse(product);
 
@@ -85,9 +86,45 @@ public static class ProductEndpoints
         .Produces<ProductResponse>(StatusCodes.Status201Created)
         .ProducesValidationProblem();
 
+        if (app.Environment.IsDevelopment())
+        {
+            products.MapPost("/seed", async Task<Results<Ok<ProductSeedResponse>, ValidationProblem>> (
+                IProductService productService,
+                CancellationToken cancellationToken,
+                int count = 5) =>
+            {
+                if (count is < 1 or > 1000)
+                {
+                    return TypedResults.ValidationProblem(new Dictionary<string, string[]>
+                    {
+                        ["count"] = ["Count must be between 1 and 1000."]
+                    });
+                }
+
+                var runId = Guid.NewGuid().ToString("N");
+                for (var index = 1; index <= count; index++)
+                {
+                    var command = new CreateProductCommand(
+                        $"Seeded Product {runId}-{index:D4}",
+                        $"Generated test product from seed run {runId}.",
+                        Random.Shared.Next(100, 5000),
+                        CatalogueService.Domain.ProductStatus.Active);
+
+                    await productService.CreateAsync(command, cancellationToken);
+                }
+
+                return TypedResults.Ok(new ProductSeedResponse(runId, count));
+            })
+            .WithName("SeedProducts")
+            .WithSummary("Seed products for development")
+            .WithDescription("Creates uniquely named sample products. Available only in the Development environment.")
+            .Produces<ProductSeedResponse>(StatusCodes.Status200OK)
+            .ProducesValidationProblem();
+        }
+
         return app;
     }
 
     private static ProductResponse ToResponse(ProductDto product) =>
-        new(product.Id, product.Name, product.Description, product.Price, product.Status, product.CreatedAt);
+        new(product.Id, product.Name, product.Description, product.Price, product.Quantity, product.Status, product.CreatedAt);
 }

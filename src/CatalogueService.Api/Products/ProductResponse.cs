@@ -8,5 +8,8 @@ public sealed record ProductResponse(
     string Name,
     string Description,
     decimal Price,
+    int? Quantity,
     ProductStatus Status,
     DateTimeOffset CreatedAt);
+
+public sealed record ProductSeedResponse(string RunId, int Count);

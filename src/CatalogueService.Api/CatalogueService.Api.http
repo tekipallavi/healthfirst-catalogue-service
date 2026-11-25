@@ -1,7 +1,7 @@
 @CatalogueService.Api_HostAddress = http://localhost:5284
 
 ### Get all products
-GET {{CatalogueService.Api_HostAddress}}/api/products?search=simp
+GET {{CatalogueService.Api_HostAddress}}/api/products?&sortBy=price&sortOrder=desc
 Accept: application/json
 
 ### Create a product
@@ -33,3 +33,8 @@ Content-Type: application/json
   "description": "",
   "price": 0
 }
+
+### Seed products (Development only)
+# @name seedProducts
+POST {{CatalogueService.Api_HostAddress}}/api/products/seed?count=5
+Accept: application/json

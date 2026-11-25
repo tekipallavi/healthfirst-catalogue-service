@@ -22,7 +22,7 @@ public sealed class ProductService(IProductRepository productRepository) : IProd
         CreateProductCommand command,
         CancellationToken cancellationToken = default)
     {
-        var product = new Product(command.Name, command.Description, command.Price, command.Status);
+        var product = new Product(command.Name, command.Description, command.Price, command.Status, command.Quantity);
         await productRepository.AddAsync(product, cancellationToken);
         return ToDto(product);
     }
@@ -33,6 +33,7 @@ public sealed class ProductService(IProductRepository productRepository) : IProd
             product.Name,
             product.Description,
             product.Price,
+            product.Quantity,
             product.Status,
             new DateTimeOffset(product.CreatedAt, TimeSpan.Zero));
 }
