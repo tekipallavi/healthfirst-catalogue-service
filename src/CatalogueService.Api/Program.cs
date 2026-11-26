@@ -30,7 +30,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapProducts();
+
+//register routes
+var api = app.MapGroup("/api");
+api.MapProducts();
+if (app.Environment.IsDevelopment())
+{
+    api.SeedProductDetails();
+}
+
+//register health check
 app.MapHealthChecks("/health/dbcheck");
 
 app.Run();
