@@ -1,0 +1,13 @@
+:::run and watch
+dotnet run --project  
+src/CatalogueService.Api --run-profile https --watch
+
+:::create migration
+dotnet ef migrations add MakeProductQuantityRequired \
+  --project src/CatalogueService.Infrastructure \
+  --startup-project src/CatalogueService.Api
+
+::: update/run migration
+dotnet ef database update \
+  --project src/CatalogueService.Infrastructure \
+  --startup-project src/CatalogueService.Api

@@ -7,5 +7,5 @@ public sealed record CreateProductCommand(
     string Description,
     decimal Price,
     ProductStatus Status,
-    int? Quantity = null);
+    int Quantity = 0);
  

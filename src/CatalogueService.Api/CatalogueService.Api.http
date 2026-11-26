@@ -1,7 +1,11 @@
 @CatalogueService.Api_HostAddress = http://localhost:5284
 
+### health check
+GET {{CatalogueService.Api_HostAddress}}/health/dbcheck
+Accept: application/json
+
 ### Get all products
-GET {{CatalogueService.Api_HostAddress}}/api/products?&sortBy=price&sortOrder=desc
+GET {{CatalogueService.Api_HostAddress}}/api/products?search=09&sortBy=price&sortOrder=desc
 Accept: application/json
 
 ### Create a product
@@ -36,5 +40,5 @@ Content-Type: application/json
 
 ### Seed products (Development only)
 # @name seedProducts
-POST {{CatalogueService.Api_HostAddress}}/api/products/seed?count=5
+POST {{CatalogueService.Api_HostAddress}}/api/products/seed?count=999
 Accept: application/json

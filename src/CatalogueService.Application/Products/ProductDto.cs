@@ -7,6 +7,6 @@ public sealed record ProductDto(
     string Name,
     string Description,
     decimal Price,
-    int? Quantity,
+    int Quantity,
     ProductStatus Status,
     DateTimeOffset CreatedAt);

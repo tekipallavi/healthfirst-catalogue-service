@@ -15,7 +15,7 @@ public sealed record CreateProductRequest
     [Range(typeof(decimal), "0.01", "9999999999999999.99")]
     public required decimal Price { get; init; }
 
-    public int? Quantity { get; init; }
+    public int Quantity { get; init; }
 
     public ProductStatus Status { get; init; } = ProductStatus.Active;
 }

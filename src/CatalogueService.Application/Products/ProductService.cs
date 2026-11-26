@@ -13,7 +13,7 @@ public sealed class ProductService(IProductRepository productRepository) : IProd
 
     public async Task<IReadOnlyList<ProductDto>> GetAllAsync(string search, string sortBy, string sortOrder, CancellationToken cancellationToken = default)
     {
-
+        
         var products = await productRepository.GetAllAsync(search, sortBy, sortOrder, cancellationToken);
         return products.Select(ToDto).ToArray();
     }

@@ -6,7 +6,7 @@ public sealed class Product
     {
     }
 
-    public Product(string name, string description, decimal price, ProductStatus status = ProductStatus.Active, int? quantity = null)
+    public Product(string name, string description, decimal price, ProductStatus status = ProductStatus.Active, int quantity = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -24,5 +24,5 @@ public sealed class Product
     public ProductStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public int? Quantity { get; private set; }
+    public int Quantity { get; private set; } = 0;
 }
